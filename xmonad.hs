@@ -102,6 +102,9 @@ myConfig = gnomeConfig
     , layoutHook = boringWindows $ avoidStruts $ smartBorders $
                 (maximize tiled ||| maximize (Mirror tiled) ||| Full ||| simpleTabbed)
     , manageHook = manageHook gnomeConfig <+> composeAll myManageHook <+> manageNamedScratchPad
+    , normalBorderColor  = myNormalBorderColor
+    , focusedBorderColor = myFocusedBorderColor
+    , borderWidth = myBorderWidth
     }
     `additionalKeys`
         [
@@ -143,4 +146,7 @@ myConfig = gnomeConfig
         -- ratio = 0.61803399
         ratio = 0.6
         delta = 3/100
+        myNormalBorderColor  = "#7c7c7c"
+        myFocusedBorderColor = "#ffb6b0"
+        myBorderWidth = 2
 
