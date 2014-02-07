@@ -29,6 +29,9 @@
 --     - in order for this to work, there must be a gnome-terminal profile
 --       called "scratchpad" and the title of the window must by "scratchpad";
 --       I also like to disable the scrollbars and the menubar.
+-- - WindowBringer
+--     - mod+g : Pops open a dmenu with window titles. Choose one, and you will be taken to the corresponding workspace.
+--     - mod+b : Pops open a dmenu with window titles. Choose one, and it will be dragged, kicking and screaming, into your current workspace.
 
 import XMonad
 import XMonad.Util.EZConfig
@@ -43,6 +46,7 @@ import XMonad.Layout.BoringWindows as BoringWindows
 import XMonad.Layout.Tabbed
 import XMonad.Util.NamedScratchpad
 import XMonad.StackSet as StackSet
+import XMonad.Actions.WindowBringer
 
 main = xmonad $ myConfig
 
@@ -120,6 +124,9 @@ myConfig = gnomeConfig
         , ((myModMask, xK_a), namedScratchpadAction scratchpads "antidote")
         -- quiting / logging out
         , ((myModMask .|. shiftMask, xK_q), spawn "gnome-session-quit")
+        -- window bringer
+        , ((myModMask, xK_g), gotoMenu)
+        , ((myModMask, xK_b), bringMenu)
         ]
     where
         myModMask = mod1Mask
