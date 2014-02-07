@@ -29,15 +29,16 @@ These are instructions to get xmonad working with Gnome, Gnome panel, and dmenu
     - You cannot start a panel or launcher from within tmux (perhaps a
       reattached tmux session that was launched in another X session...);
       so use a new terminal instead.
-
-.. warning::
-
     - I had issues with the system finding the correct xmonad.desktop or
       xmonad.session file (not sure what the problem was, however).
       If there are problems, move the default files provided by Ubuntu out
       of the way.
 
-- install xmonad, gnome-panel and dmenu (for use with Mod-p)::
+~~~~~~~~~~~~
+Instructions
+~~~~~~~~~~~~
+
+- install xmonad, gnome-panel and dmenu (for use with ``Mod-p``)::
 
     apt-get install xmonad
     apt-get install gnome-panel
@@ -72,7 +73,7 @@ These are instructions to get xmonad working with Gnome, Gnome panel, and dmenu
     Name=Xmonad-Gnome Hybrid of Amazingness
     RequiredComponents=gnome-settings-daemon;gnome-panel;xmonad
 
-- clone/copy/link ``~/.xmonad/xmonad.hs`` into place
+- clone/copy/link ``~/.xmonad/xmonad.hs`` into place (see above)
 
 - launch gnome-terminal and create a profile with the following
   settings (this is used by the "scratchpad" terminal (Mod-t))::
@@ -105,9 +106,9 @@ These are instructions to get xmonad working with Gnome, Gnome panel, and dmenu
 
 - log out; log in and enjoy!
 
------
+~~~~~
 Notes
------
+~~~~~
 
 - Previously, I had xmonad configured to work with the ``unity-2d-launcher``
   and the ``unity-2d-panel``. I used the following
@@ -128,7 +129,9 @@ Notes
 - I haven't looked into this yet, but it could be cool to integrate Ubuntu's
   HUD with XMonad.
 
-**References**
+~~~~~~~~~~
+References
+~~~~~~~~~~
 
 - `Xmonad/Using xmonad in Gnome <http://www.haskell.org/haskellwiki/Xmonad/Using_xmonad_in_Gnome>`_
 - `Using Xmonad in Unity 2D <http://www.haskell.org/haskellwiki/Xmonad/Using_xmonad_in_Unity_2D>`_
