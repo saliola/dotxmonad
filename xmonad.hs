@@ -5,14 +5,6 @@
 --     xmonad --recompile
 --     xmonad --restart
 
--- NOTES:
--- - There is some code below from when I configured XMonad to integrate with
--- unity-2d-panel and unity-2d-launcher. But Ubuntu migrated from these to the
--- combined unity interface. I haven't looked into this yet, but it could be
--- cool to integrate Ubuntu's HUD with XMonad (as a launcher, at the very
--- least). I left the code dealing with creating a Gap for the launcher in case
--- I decide to include another launcher.
-
 -- FEATURES:
 -- - configured to work with gnome-panel:
 --     - includes gnome-panel, but no launcher
@@ -21,8 +13,6 @@
 --     - no border if there is only one window
 -- - uses ResizableTall to allow for resizing windows:
 --     - mod+s and mod+x for shrink/expand
--- - gvim keybinding:
---     - mod+g spans gvim
 -- - maximize keybinding (Layout.Maximize):
 --     - mod+z zooms in on a window
 -- - workspace navigation (Actions.CycleWS):
@@ -33,9 +23,6 @@
 --     - mod+shift+B mark window as boring
 --     - mod+shift+ctrl+B clear marks
 --     - mod+j/mod+k cycle but skip boring windows
--- - Gaps: create gap on left side for the Unity launcher
---     - mod+u toggle Unity launcher
---     - this is an artifact of when I configured this to work with the Unity launcher
 -- - Scratchpad: terminal
 --     - mod+t spawns terminal, or brings terminal to current workspace, or
 --       moves terminal to hidden workspace called NSP
@@ -54,7 +41,6 @@ import XMonad.Layout.Maximize
 import XMonad.Actions.CycleWS
 import XMonad.Layout.BoringWindows as BoringWindows
 import XMonad.Layout.Tabbed
-import XMonad.Layout.Gaps
 import XMonad.Util.NamedScratchpad
 import XMonad.StackSet as StackSet
 
@@ -98,7 +84,6 @@ manageNamedScratchPad = namedScratchpadManageHook scratchpads
 
 myConfig = gnomeConfig
     { modMask = myModMask
-    -- , layoutHook = gaps [(L, 66)] $ boringWindows $ avoidStruts $ smartBorders $
     , layoutHook = boringWindows $ avoidStruts $ smartBorders $
                 (maximize tiled ||| maximize (Mirror tiled) ||| Full ||| simpleTabbed)
     , manageHook = manageHook gnomeConfig <+> composeAll myManageHook <+> manageNamedScratchPad
@@ -125,15 +110,13 @@ myConfig = gnomeConfig
         , ((myModMask, xK_m), BoringWindows.focusMaster)
         , ((myModMask .|. shiftMask, xK_b), BoringWindows.markBoring)
         , ((myModMask .|. shiftMask .|. controlMask, xK_b), BoringWindows.clearBoring)
-        -- Gaps
-        , ((myModMask, xK_u), sendMessage $ ToggleGap L)
-        -- Launch gvim
-        , ((myModMask, xK_g), spawn "gvim")
+        -- Application launcher dmenu
         , ((myModMask, xK_p), spawn "dmenu_run")
         -- Push window back into tiling (free up xK_t for scratchPad)
         , ((myModMask .|. shiftMask, xK_t), withFocused $ windows.StackSet.sink)
-        -- scratchpad
+        -- scratchpad (floating terminal)
         , ((myModMask, xK_t), namedScratchpadAction scratchpads "gnome-terminal")
+        -- antidote
         , ((myModMask, xK_a), namedScratchpadAction scratchpads "antidote")
         -- quiting / logging out
         , ((myModMask .|. shiftMask, xK_q), spawn "gnome-session-quit")
