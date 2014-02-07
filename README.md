@@ -1,4 +1,0 @@
-dotxmonad
-=========
-
-My .xmonad directory
