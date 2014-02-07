@@ -130,7 +130,6 @@ myConfig = gnomeConfig
         -- Launch gvim
         , ((myModMask, xK_g), spawn "gvim")
         , ((myModMask, xK_p), spawn "dmenu_run")
-        , ((myModMask .|. shiftMask, xK_p), spawn "dbus-send --dest=com.canonical.Unity2d.Dash --type=method_call /Dash com.canonical.Unity2d.Dash.activateHome")
         -- Push window back into tiling (free up xK_t for scratchPad)
         , ((myModMask .|. shiftMask, xK_t), withFocused $ windows.StackSet.sink)
         -- scratchpad
