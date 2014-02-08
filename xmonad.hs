@@ -47,6 +47,7 @@ import XMonad.Layout.Tabbed
 import XMonad.Util.NamedScratchpad
 import XMonad.StackSet as StackSet
 import XMonad.Actions.WindowBringer
+import XMonad.Layout.ThreeColumns
 
 main = xmonad $ myConfig
 
@@ -89,7 +90,18 @@ manageNamedScratchPad = namedScratchpadManageHook scratchpads
 myConfig = gnomeConfig
     { modMask = myModMask
     , layoutHook = boringWindows $ avoidStruts $ smartBorders $
-                (maximize tiled ||| maximize (Mirror tiled) ||| Full ||| simpleTabbed)
+        -- ThreeCol:
+        --   first arg : number of windows in main window
+        --   second arg: myDelta
+        --   third arg : if positive, size of main window
+        (
+        maximize tiled |||
+        maximize (ThreeCol 1 myDelta (2/5)) |||
+        maximize (ThreeColMid 1 myDelta (2/5)) |||
+        maximize (Mirror tiled) |||
+        Full |||
+        simpleTabbed
+        )
     , manageHook = manageHook gnomeConfig <+> composeAll myManageHook <+> manageNamedScratchPad
     , normalBorderColor  = myNormalBorderColor
     , focusedBorderColor = myFocusedBorderColor
@@ -130,11 +142,11 @@ myConfig = gnomeConfig
         ]
     where
         myModMask = mod1Mask
-        tiled = ResizableTall nmaster delta ratio []
+        tiled = ResizableTall nmaster myDelta myRatio []
         nmaster = 1
-        -- ratio = 0.61803399
-        ratio = 0.6
-        delta = 3/100
+        -- myRatio = 0.61803399
+        myRatio = 0.6
+        myDelta = 3/100
         myNormalBorderColor  = "#7c7c7c"
         myFocusedBorderColor = "#ffb6b0"
         myBorderWidth = 2
