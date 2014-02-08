@@ -30,8 +30,8 @@
 --       called "scratchpad" and the title of the window must by "scratchpad";
 --       I also like to disable the scrollbars and the menubar.
 -- - WindowBringer
---     - mod+g : Pops open a dmenu with window titles. Choose one, and you will be taken to the corresponding workspace.
---     - mod+b : Pops open a dmenu with window titles. Choose one, and it will be dragged, kicking and screaming, into your current workspace.
+--     - mod+shift+g : Pops open a dmenu with window titles. Choose one, and you will be taken to the corresponding workspace.
+--     - mod+shift+b : Pops open a dmenu with window titles. Choose one, and it will be dragged, kicking and screaming, into your current workspace.
 
 import XMonad
 import XMonad.Util.EZConfig
@@ -125,8 +125,8 @@ myConfig = gnomeConfig
         -- quiting / logging out
         , ((myModMask .|. shiftMask, xK_q), spawn "gnome-session-quit")
         -- window bringer
-        , ((myModMask, xK_g), gotoMenu)
-        , ((myModMask, xK_b), bringMenu)
+        , ((myModMask .|. shiftMask, xK_g), gotoMenu)
+        , ((myModMask .|. shiftMask, xK_b), bringMenu)
         ]
     where
         myModMask = mod1Mask
