@@ -8,7 +8,7 @@ Installation in two easy steps
 
 Clone repo::
 
-    git clone https://github.com/saliola/dotxmonad.git ~/.xmonad
+    git clone https://github.com/saliola/xmonad-conf.git ~/.xmonad
 
 Recompile and restart xmonad::
 
