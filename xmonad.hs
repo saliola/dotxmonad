@@ -106,6 +106,7 @@ myConfig = gnomeConfig
     , normalBorderColor  = myNormalBorderColor
     , focusedBorderColor = myFocusedBorderColor
     , borderWidth = myBorderWidth
+    , focusFollowsMouse = False
     }
     `additionalKeys`
         [
