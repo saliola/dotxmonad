@@ -32,12 +32,15 @@
 -- - WindowBringer
 --     - mod+shift+g : Pops open a dmenu with window titles. Choose one, and you will be taken to the corresponding workspace.
 --     - mod+shift+b : Pops open a dmenu with window titles. Choose one, and it will be dragged, kicking and screaming, into your current workspace.
+-- - InsertPosition : Configure where new windows should be added and which window should be focused
+--     - currently configured to pul new windows in the master pane
 
 import XMonad
 import XMonad.Util.EZConfig
 import XMonad.Config.Gnome
 import XMonad.ManageHook
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.InsertPosition
 import XMonad.Layout.NoBorders
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.Maximize
@@ -102,7 +105,7 @@ myConfig = gnomeConfig
         Full |||
         simpleTabbed
         )
-    , manageHook = manageHook gnomeConfig <+> composeAll myManageHook <+> manageNamedScratchPad
+    , manageHook = insertPosition Master Newer <+> manageHook gnomeConfig <+> composeAll myManageHook <+> manageNamedScratchPad
     , normalBorderColor  = myNormalBorderColor
     , focusedBorderColor = myFocusedBorderColor
     , borderWidth = myBorderWidth
