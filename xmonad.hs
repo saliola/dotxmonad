@@ -34,6 +34,11 @@
 --     - mod+shift+b : Pops open a dmenu with window titles. Choose one, and it will be dragged, kicking and screaming, into your current workspace.
 -- - InsertPosition : Configure where new windows should be added and which window should be focused
 --     - currently configured to pul new windows in the master pane
+-- - PhysicalScreens : rebind keys to switch xinerama screens (screen 0 is to the left of screen 1)
+--     - mod+w : switch to screen 0
+--     - mod+e : switch to screen 1
+--     - mod+shift+w : send to screen 0
+--     - mod+shift+e : send to screen 1
 
 import XMonad
 import XMonad.Util.EZConfig
@@ -51,6 +56,7 @@ import XMonad.Util.NamedScratchpad
 import XMonad.StackSet as StackSet
 import XMonad.Actions.WindowBringer
 import XMonad.Layout.ThreeColumns
+import XMonad.Actions.PhysicalScreens
 
 main = xmonad $ myConfig
 
@@ -143,6 +149,11 @@ myConfig = gnomeConfig
         -- window bringer
         , ((myModMask .|. shiftMask, xK_g), gotoMenu)
         , ((myModMask .|. shiftMask, xK_b), bringMenu)
+        -- xinerama (screen 0 is to the left of screen 1)
+        , ((myModMask, xK_w), viewScreen 0)
+        , ((myModMask .|. shiftMask, xK_w), sendToScreen 0)
+        , ((myModMask, xK_e), viewScreen 1)
+        , ((myModMask .|. shiftMask, xK_e), sendToScreen 1)
         ]
     where
         myModMask = mod1Mask
