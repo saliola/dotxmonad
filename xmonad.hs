@@ -141,6 +141,11 @@ myConfig = gnomeConfig
         , ((myModMask .|. controlMask, xK_Right), nextWS)
         , ((myModMask .|. shiftMask, xK_Left), shiftToPrev >> prevWS)
         , ((myModMask .|. shiftMask, xK_Right), shiftToNext >> nextWS)
+        -- also use vi-like keybindings to cycle through workspaces
+        , ((myModMask .|. controlMask, xK_h), prevWS)
+        , ((myModMask .|. controlMask, xK_l), nextWS)
+        , ((myModMask .|. controlMask .|. shiftMask, xK_h), shiftToPrev >> prevWS)
+        , ((myModMask .|. controlMask .|. shiftMask, xK_l), shiftToNext >> nextWS)
         -- BoringWindows
         , ((myModMask, xK_k), BoringWindows.focusUp)
         , ((myModMask, xK_j), BoringWindows.focusDown)
