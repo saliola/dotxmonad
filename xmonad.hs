@@ -38,7 +38,7 @@
 --     - mod+shift+e : send to screen 1
 -- - ShellPrompt
 --     - mod+shift+p : prompt to run a command
--- - DynamicWorkspaces : form moving between workspaces
+-- - DynamicWorkspaces : for moving between workspaces
 --     - named workspaces
 --     - mod+ctrl+w : select workspace
 --     - mod+ctrl+r : rename workspace
