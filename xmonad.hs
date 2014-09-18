@@ -108,7 +108,7 @@ manageNamedScratchPad = namedScratchpadManageHook scratchpads
 
 myConfig = gnomeConfig
     { modMask = myModMask
-    , XMonad.workspaces = ["mission control", "r2r", "mat2250", "config"] ++ map show [4..9]
+    , XMonad.workspaces = ["mission control", "r2r", "mat2250", "config"] ++ map show [5..9]
     , layoutHook = boringWindows $ avoidStruts $ smartBorders $
         -- ThreeCol:
         --   first arg : number of windows in main window
@@ -165,12 +165,12 @@ myConfig = gnomeConfig
         , ((myModMask, xK_e), viewScreen 1)
         , ((myModMask .|. shiftMask, xK_e), sendToScreen 1)
         -- DynamicWorkspaces: select workspace
-        , ((myModMask .|. controlMask, xK_w), selectWorkspace defaultXPConfig { position = Top })
-        , ((myModMask .|. controlMask, xK_r), renameWorkspace defaultXPConfig { position = Top })
+        , ((myModMask .|. controlMask, xK_p), selectWorkspace defaultXPConfig { position = Top, alwaysHighlight = True })
+        , ((myModMask .|. controlMask, xK_r), renameWorkspace defaultXPConfig { position = Top, alwaysHighlight = True })
         , ((myModMask .|. controlMask, xK_BackSpace), removeWorkspace)
         -- WindowPrompt
-        , ((myModMask .|. controlMask, xK_b), windowPromptBring defaultXPConfig { position = Top})
-        , ((myModMask .|. controlMask, xK_g), windowPromptGoto defaultXPConfig { autoComplete = Just 500000, position = Top })
+        , ((myModMask .|. controlMask, xK_b), windowPromptBring defaultXPConfig { position = Top, alwaysHighlight = True })
+        , ((myModMask .|. controlMask, xK_g), windowPromptGoto defaultXPConfig { autoComplete = Just 500000, position = Top, alwaysHighlight = True })
         ]
     where
         myModMask = mod1Mask
