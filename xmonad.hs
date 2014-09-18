@@ -29,9 +29,6 @@
 --     - in order for this to work, there must be a gnome-terminal profile
 --       called "scratchpad" and the title of the window must by "scratchpad";
 --       I also like to disable the scrollbars and the menubar.
--- - WindowBringer
---     - mod+shift+g : Pops open a dmenu with window titles. Choose one, and you will be taken to the corresponding workspace.
---     - mod+shift+b : Pops open a dmenu with window titles. Choose one, and it will be dragged, kicking and screaming, into your current workspace.
 -- - InsertPosition : Configure where new windows should be added and which window should be focused
 --     - currently configured to pul new windows in the master pane
 -- - PhysicalScreens : rebind keys to switch xinerama screens (screen 0 is to the left of screen 1)
@@ -39,6 +36,16 @@
 --     - mod+e : switch to screen 1
 --     - mod+shift+w : send to screen 0
 --     - mod+shift+e : send to screen 1
+-- - ShellPrompt
+--     - mod+shift+p : prompt to run a command
+-- - DynamicWorkspaces : form moving between workspaces
+--     - named workspaces
+--     - mod+ctrl+w : select workspace
+--     - mod+ctrl+r : rename workspace
+--     - mod+ctrl+backspace : remove workspace
+-- - WindowPrompt : brings you to windows and windows to you
+--     - mod+ctrl+g : Pops open a menu with window titles. Choose one, and you will be taken to the corresponding workspace.
+--     - mod+ctrl+b : Pops open a menu with window titles. Choose one, and it will be dragged, kicking and screaming, into your current workspace.
 
 import XMonad
 import XMonad.Util.EZConfig
@@ -54,9 +61,12 @@ import XMonad.Layout.BoringWindows as BoringWindows
 import XMonad.Layout.Tabbed
 import XMonad.Util.NamedScratchpad
 import XMonad.StackSet as StackSet
-import XMonad.Actions.WindowBringer
 import XMonad.Layout.ThreeColumns
 import XMonad.Actions.PhysicalScreens
+import XMonad.Actions.DynamicWorkspaces
+import XMonad.Prompt
+import XMonad.Prompt.Window
+import XMonad.Prompt.Shell
 
 main = xmonad $ myConfig
 
@@ -98,6 +108,7 @@ manageNamedScratchPad = namedScratchpadManageHook scratchpads
 
 myConfig = gnomeConfig
     { modMask = myModMask
+    , XMonad.workspaces = ["mission control", "r2r", "mat2250", "config"] ++ map show [4..9]
     , layoutHook = boringWindows $ avoidStruts $ smartBorders $
         -- ThreeCol:
         --   first arg : number of windows in main window
@@ -138,6 +149,8 @@ myConfig = gnomeConfig
         , ((myModMask .|. shiftMask .|. controlMask, xK_b), BoringWindows.clearBoring)
         -- Application launcher dmenu
         , ((myModMask, xK_p), spawn "dmenu_run")
+        -- WindowShell: command launcher
+        , ((myModMask .|. shiftMask, xK_p), shellPrompt defaultXPConfig { position = Top })
         -- Push window back into tiling (free up xK_t for scratchPad)
         , ((myModMask .|. shiftMask, xK_t), withFocused $ windows.StackSet.sink)
         -- scratchpad (floating terminal)
@@ -146,14 +159,18 @@ myConfig = gnomeConfig
         , ((myModMask, xK_a), namedScratchpadAction scratchpads "antidote")
         -- quiting / logging out
         , ((myModMask .|. shiftMask, xK_q), spawn "gnome-session-quit")
-        -- window bringer
-        , ((myModMask .|. shiftMask, xK_g), gotoMenu)
-        , ((myModMask .|. shiftMask, xK_b), bringMenu)
         -- xinerama (screen 0 is to the left of screen 1)
         , ((myModMask, xK_w), viewScreen 0)
         , ((myModMask .|. shiftMask, xK_w), sendToScreen 0)
         , ((myModMask, xK_e), viewScreen 1)
         , ((myModMask .|. shiftMask, xK_e), sendToScreen 1)
+        -- DynamicWorkspaces: select workspace
+        , ((myModMask .|. controlMask, xK_w), selectWorkspace defaultXPConfig { position = Top })
+        , ((myModMask .|. controlMask, xK_r), renameWorkspace defaultXPConfig { position = Top })
+        , ((myModMask .|. controlMask, xK_BackSpace), removeWorkspace)
+        -- WindowPrompt
+        , ((myModMask .|. controlMask, xK_b), windowPromptBring defaultXPConfig { position = Top})
+        , ((myModMask .|. controlMask, xK_g), windowPromptGoto defaultXPConfig { autoComplete = Just 500000, position = Top })
         ]
     where
         myModMask = mod1Mask
