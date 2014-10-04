@@ -51,29 +51,34 @@
 --     - mod+x : Pops open a menu with a list of XMonad commands (can be
 --       modified to use a custom command list; see XMonadPromptC)
 
+import System.IO
 import XMonad
-import XMonad.Util.EZConfig
+import XMonad.Actions.CycleWS
+import XMonad.Actions.PhysicalScreens
 import XMonad.Config.Gnome
-import XMonad.ManageHook
-import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.InsertPosition
+import XMonad.Hooks.ManageDocks
+import XMonad.Layout.BoringWindows as BoringWindows
+import XMonad.Layout.Maximize
 import XMonad.Layout.NoBorders
 import XMonad.Layout.ResizableTile
-import XMonad.Layout.Maximize
-import XMonad.Actions.CycleWS
-import XMonad.Layout.BoringWindows as BoringWindows
 import XMonad.Layout.Tabbed
-import XMonad.Util.NamedScratchpad
-import XMonad.StackSet as StackSet
 import XMonad.Layout.ThreeColumns
-import XMonad.Actions.PhysicalScreens
+import XMonad.ManageHook
 import XMonad.Prompt
 import XMonad.Prompt.Shell
 import XMonad.Prompt.Workspace
 import XMonad.Prompt.Window
 import XMonad.Prompt.XMonad
+import XMonad.StackSet as StackSet
+import XMonad.Util.EZConfig
+import XMonad.Util.NamedScratchpad
+import XMonad.Util.Run(spawnPipe)
 
-main = xmonad $ myConfig
+main = do
+    xmproc <- spawnPipe "xmobar /home/saliola/.xmonad/xmobarrc"
+    xmonad $ myConfig xmproc
 
 myManageHook :: [ManageHook]
 -- EXAMPLE: how to tell XMonad to ignore a particular window
@@ -111,7 +116,7 @@ scratchpads = [
 manageNamedScratchPad :: ManageHook
 manageNamedScratchPad = namedScratchpadManageHook scratchpads
 
-myConfig = gnomeConfig
+myConfig xmproc = gnomeConfig
     { modMask = myModMask
     , XMonad.workspaces = ["mission control", "r2r", "mat2250", "config"] ++ map show [5..9] ++ ["NSP"]
     , layoutHook = boringWindows $ avoidStruts $ smartBorders $
@@ -132,6 +137,7 @@ myConfig = gnomeConfig
     , focusedBorderColor = myFocusedBorderColor
     , borderWidth = myBorderWidth
     , focusFollowsMouse = False
+    , logHook = myLogHook xmproc
     }
     `additionalKeys`
         [
@@ -193,3 +199,7 @@ myConfig = gnomeConfig
         myFocusedBorderColor = "#ffb6b0"
         myBorderWidth = 2
 
+myLogHook xmproc = dynamicLogWithPP xmobarPP
+                        { ppOutput = hPutStrLn xmproc
+                        , ppTitle = xmobarColor "green" "" . shorten 50
+                        }
