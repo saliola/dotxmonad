@@ -29,9 +29,11 @@
 --     - in order for this to work, there must be a gnome-terminal profile
 --       called "scratchpad" and the title of the window must by "scratchpad";
 --       I also like to disable the scrollbars and the menubar.
--- - InsertPosition : Configure where new windows should be added and which window should be focused
+-- - InsertPosition : Configure where new windows should be added and which
+--       window should be focused
 --     - currently configured to pul new windows in the master pane
--- - PhysicalScreens : rebind keys to switch xinerama screens (screen 0 is to the left of screen 1)
+-- - PhysicalScreens : rebind keys to switch xinerama screens (screen 0 is to
+--       the left of screen 1)
 --     - mod+w : switch to screen 0
 --     - mod+e : switch to screen 1
 --     - mod+shift+w : send to screen 0
@@ -41,8 +43,13 @@
 -- - WorkspacePrompt : for moving between named workspaces
 --     - mod+ctrl+p : select workspace
 -- - WindowPrompt : brings you to windows and windows to you
---     - mod+ctrl+g : Pops open a menu with window titles. Choose one, and you will be taken to the corresponding workspace.
---     - mod+ctrl+b : Pops open a menu with window titles. Choose one, and it will be dragged, kicking and screaming, into your current workspace.
+--     - mod+ctrl+g : Pops open a menu with window titles. Choose one, and you
+--       will be taken to the corresponding workspace.
+--     - mod+ctrl+b : Pops open a menu with window titles. Choose one, and it
+--       will be dragged, kicking and screaming, into your current workspace.
+-- - XMonadPrompt : a prompt from running XMonad commands
+--     - mod+x : Pops open a menu with a list of XMonad commands (can be
+--       modified to use a custom command list; see XMonadPromptC)
 
 import XMonad
 import XMonad.Util.EZConfig
@@ -64,6 +71,7 @@ import XMonad.Prompt
 import XMonad.Prompt.Shell
 import XMonad.Prompt.Workspace
 import XMonad.Prompt.Window
+import XMonad.Prompt.XMonad
 
 main = xmonad $ myConfig
 
@@ -171,6 +179,8 @@ myConfig = gnomeConfig
         -- WindowPrompt
         , ((myModMask .|. controlMask, xK_b), windowPromptBring defaultXPConfig { position = Top, alwaysHighlight = True })
         , ((myModMask .|. controlMask, xK_g), windowPromptGoto defaultXPConfig { autoComplete = Just 500000, position = Top, alwaysHighlight = True })
+        -- XMonadPrompt: prompt for a XMonad command
+        , ((myModMask, xK_x), xmonadPrompt defaultXPConfig { position = Top, alwaysHighlight = True })
         ]
     where
         myModMask = mod1Mask
