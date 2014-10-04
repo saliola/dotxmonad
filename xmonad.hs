@@ -38,11 +38,8 @@
 --     - mod+shift+e : send to screen 1
 -- - ShellPrompt
 --     - mod+shift+p : prompt to run a command
--- - DynamicWorkspaces : for moving between workspaces
---     - named workspaces
---     - mod+ctrl+w : select workspace
---     - mod+ctrl+r : rename workspace
---     - mod+ctrl+backspace : remove workspace
+-- - WorkspacePrompt : for moving between named workspaces
+--     - mod+ctrl+p : select workspace
 -- - WindowPrompt : brings you to windows and windows to you
 --     - mod+ctrl+g : Pops open a menu with window titles. Choose one, and you will be taken to the corresponding workspace.
 --     - mod+ctrl+b : Pops open a menu with window titles. Choose one, and it will be dragged, kicking and screaming, into your current workspace.
@@ -63,10 +60,10 @@ import XMonad.Util.NamedScratchpad
 import XMonad.StackSet as StackSet
 import XMonad.Layout.ThreeColumns
 import XMonad.Actions.PhysicalScreens
-import XMonad.Actions.DynamicWorkspaces
 import XMonad.Prompt
-import XMonad.Prompt.Window
 import XMonad.Prompt.Shell
+import XMonad.Prompt.Workspace
+import XMonad.Prompt.Window
 
 main = xmonad $ myConfig
 
@@ -169,10 +166,8 @@ myConfig = gnomeConfig
         , ((myModMask .|. shiftMask, xK_w), sendToScreen 0)
         , ((myModMask, xK_e), viewScreen 1)
         , ((myModMask .|. shiftMask, xK_e), sendToScreen 1)
-        -- DynamicWorkspaces: select workspace
-        , ((myModMask .|. controlMask, xK_p), selectWorkspace defaultXPConfig { position = Top, alwaysHighlight = True })
-        , ((myModMask .|. controlMask, xK_r), renameWorkspace defaultXPConfig { position = Top, alwaysHighlight = True })
-        , ((myModMask .|. controlMask, xK_BackSpace), removeWorkspace)
+        -- WorkspacePrompt: select workspace
+        , ((myModMask .|. controlMask, xK_p), workspacePrompt defaultXPConfig { position = Top, alwaysHighlight = True } (windows . StackSet.shift))
         -- WindowPrompt
         , ((myModMask .|. controlMask, xK_b), windowPromptBring defaultXPConfig { position = Top, alwaysHighlight = True })
         , ((myModMask .|. controlMask, xK_g), windowPromptGoto defaultXPConfig { autoComplete = Just 500000, position = Top, alwaysHighlight = True })
