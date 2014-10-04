@@ -200,6 +200,11 @@ myConfig xmproc = gnomeConfig
         myBorderWidth = 2
 
 myLogHook xmproc = dynamicLogWithPP xmobarPP
-                        { ppOutput = hPutStrLn xmproc
-                        , ppTitle = xmobarColor "green" "" . shorten 50
-                        }
+      { ppOutput  = hPutStrLn xmproc
+      , ppTitle   = xmobarColor "purple" "" . shorten 50
+      , ppCurrent = xmobarColor "orange" "" . wrap "[" "]"
+      , ppVisible = xmobarColor "yellow" "" . wrap "(" ")"
+      , ppHidden = xmobarColor "gray" ""
+      , ppHiddenNoWindows = xmobarColor "#333333" ""
+      , ppUrgent  = xmobarColor "red" ""
+      }
