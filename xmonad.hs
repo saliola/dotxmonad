@@ -181,7 +181,7 @@ myConfig xmproc = gnomeConfig
         , ((myModMask, xK_e), viewScreen 1)
         , ((myModMask .|. shiftMask, xK_e), sendToScreen 1)
         -- WorkspacePrompt: select workspace
-        , ((myModMask .|. controlMask, xK_p), workspacePrompt defaultXPConfig { position = Top, alwaysHighlight = True } (windows . StackSet.shift))
+        , ((myModMask .|. controlMask, xK_p), workspacePrompt defaultXPConfig { position = Top, alwaysHighlight = True } (windows . StackSet.greedyView))
         -- WindowPrompt
         , ((myModMask .|. controlMask, xK_b), windowPromptBring defaultXPConfig { position = Top, alwaysHighlight = True })
         , ((myModMask .|. controlMask, xK_g), windowPromptGoto defaultXPConfig { autoComplete = Just 500000, position = Top, alwaysHighlight = True })
