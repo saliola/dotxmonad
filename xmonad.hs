@@ -118,7 +118,7 @@ manageNamedScratchPad = namedScratchpadManageHook scratchpads
 
 myConfig xmproc = gnomeConfig
     { modMask = myModMask
-    , XMonad.workspaces = ["mc(1)", "r2r(2)", "mat2250(3)", "config(4)"] ++ map show [5..9] ++ ["NSP"]
+    , XMonad.workspaces = ["mc(1)", "r2r(2)", "mat2250(3)", "config(4)"] ++ map show [5..8] ++ ["scratch(9)"] ++ ["NSP"]
     , layoutHook = boringWindows $ avoidStruts $ smartBorders $
         -- ThreeCol:
         --   first arg : number of windows in main window
