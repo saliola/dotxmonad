@@ -58,6 +58,7 @@ import XMonad.Actions.PhysicalScreens
 import XMonad.Config.Gnome
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.InsertPosition
+import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.ManageDocks
 import XMonad.Layout.BoringWindows as BoringWindows
 import XMonad.Layout.Maximize
@@ -78,6 +79,7 @@ import XMonad.Util.Run(spawnPipe)
 
 main = do
     xmproc <- spawnPipe "xmobar /home/saliola/.xmonad/xmobarrc"
+    spawn "xcompmgr"
     xmonad $ myConfig xmproc
 
 myManageHook :: [ManageHook]
@@ -137,7 +139,7 @@ myConfig xmproc = gnomeConfig
     , focusedBorderColor = myFocusedBorderColor
     , borderWidth = myBorderWidth
     , focusFollowsMouse = False
-    , logHook = myLogHook xmproc
+    , logHook = fadeInactiveLogHook 0.7 <+> myLogHook xmproc
     }
     `additionalKeys`
         [
