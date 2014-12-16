@@ -195,9 +195,9 @@ myConfig xmproc = gnomeConfig
         -- myRatio = 0.61803399
         myRatio = 0.6
         myDelta = 3/100
-        myNormalBorderColor  = "#7c7c7c"
-        myFocusedBorderColor = "#ffb6b0"
-        myBorderWidth = 2
+        myNormalBorderColor  = "black"
+        myFocusedBorderColor = "yellow"
+        myBorderWidth = 4
 
 myLogHook xmproc = dynamicLogWithPP xmobarPP
       { ppOutput  = hPutStrLn xmproc
