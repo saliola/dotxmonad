@@ -65,6 +65,7 @@ import XMonad.Layout.NoBorders
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.Tabbed
 import XMonad.Layout.ThreeColumns
+import XMonad.Layout.TwoPane
 import XMonad.ManageHook
 import XMonad.Prompt
 import XMonad.Prompt.Shell
@@ -75,6 +76,9 @@ import XMonad.StackSet as StackSet
 import XMonad.Util.EZConfig
 import XMonad.Util.NamedScratchpad
 import XMonad.Util.Run(spawnPipe)
+
+import XMonad.Layout.Combo
+import XMonad.Layout.WindowNavigation
 
 main = do
     xmproc <- spawnPipe "xmobar /home/saliola/.xmonad/xmobarrc"
@@ -126,6 +130,8 @@ myConfig xmproc = gnomeConfig
         --   third arg : if positive, size of main window
         (
         maximize tiled |||
+        TwoPane (3/100) (1/2) |||
+        myLatex |||
         maximize (ThreeCol 1 myDelta (2/5)) |||
         maximize (ThreeColMid 1 myDelta (2/5)) |||
         maximize (Mirror tiled) |||
@@ -187,6 +193,11 @@ myConfig xmproc = gnomeConfig
         , ((myModMask .|. controlMask, xK_g), windowPromptGoto defaultXPConfig { autoComplete = Just 500000, position = Top, alwaysHighlight = True })
         -- XMonadPrompt: prompt for a XMonad command
         , ((myModMask, xK_x), xmonadPrompt defaultXPConfig { position = Top, alwaysHighlight = True })
+        -- Combo
+        , ((myModMask .|. controlMask .|. shiftMask, xK_Right), sendMessage $ Move R)
+        , ((myModMask .|. controlMask .|. shiftMask, xK_Left ), sendMessage $ Move L)
+        , ((myModMask .|. controlMask .|. shiftMask, xK_Up   ), sendMessage $ Move U)
+        , ((myModMask .|. controlMask .|. shiftMask, xK_Down ), sendMessage $ Move D)       --
         ]
     where
         myModMask = mod1Mask
@@ -198,6 +209,16 @@ myConfig xmproc = gnomeConfig
         myNormalBorderColor  = "black"
         myFocusedBorderColor = "yellow"
         myBorderWidth = 4
+        myLatex = windowNavigation (
+                                    combineTwo
+                                    (TwoPane myDelta 0.45)
+                                    (Full)
+                                    (combineTwo
+                                        (Mirror (TwoPane myDelta 0.85))
+                                        (Full)
+                                        (Full)
+                                    )
+                                   )
 
 myLogHook xmproc = dynamicLogWithPP xmobarPP
       { ppOutput  = hPutStrLn xmproc
