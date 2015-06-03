@@ -9,48 +9,66 @@
 -- - configured to work with gnome-panel:
 --     - includes gnome-panel, but no launcher
 --     - mod+b toggles displaying the panel (default behaviour)
+--
 -- - uses smartBorders:
 --     - no border if there is only one window
+--
 -- - uses ResizableTall to allow for resizing windows:
 --     - mod+s and mod+x for shrink/expand
+--
 -- - maximize keybinding (Layout.Maximize):
 --     - mod+z zooms in on a window
+--
 -- - workspace navigation (Actions.CycleWS):
---     - mod+` switches to previous workspace
---     - mod+ctrl+left/right switchs to previous/next workspace
+--     - mod+` toggle previously displayed workspace ignoring NSP (scratchpad)
+--     - mod+ctrl+left/right switches to previous/next workspace
 --     - mod+shift+left/right shifts focused window to previous/next workspace
+--     - mod+f find a free workspace
+--
+-- - workspace navigation with vi-like keybindings (Actions.CycleWS):
+--     - mod+ctrl+h/l switches to previous/next workspace
+--     - mod+ctrl+H/L shifts focused window to previous/next workspace
+--
 -- - BoringWindows: skip boring windows
 --     - mod+shift+B mark window as boring
 --     - mod+shift+ctrl+B clear marks
 --     - mod+j/mod+k cycle but skip boring windows
+--
 -- - Scratchpad: terminal
 --     - mod+t spawns terminal, or brings terminal to current workspace, or
 --       moves terminal to hidden workspace called NSP
 --     - in order for this to work, there must be a gnome-terminal profile
 --       called "scratchpad" and the title of the window must by "scratchpad";
 --       I also like to disable the scrollbars and the menubar.
+--
 -- - InsertPosition : Configure where new windows should be added and which
 --       window should be focused
 --     - currently configured to pul new windows in the master pane
+--
 -- - PhysicalScreens : rebind keys to switch xinerama screens (screen 0 is to
 --       the left of screen 1)
 --     - mod+w : switch to screen 0
 --     - mod+e : switch to screen 1
 --     - mod+shift+w : send to screen 0
 --     - mod+shift+e : send to screen 1
+--
 -- - ShellPrompt
 --     - mod+shift+p : prompt to run a command
+--
 -- - WorkspacePrompt : for moving between named workspaces
 --     - mod+ctrl+p : select workspace
+--
 -- - WindowPrompt : brings you to windows and windows to you
 --     - mod+ctrl+g : Pops open a menu with window titles. Choose one, and you
 --       will be taken to the corresponding workspace.
 --     - mod+ctrl+b : Pops open a menu with window titles. Choose one, and it
 --       will be dragged, kicking and screaming, into your current workspace.
+--
 -- - XMonadPrompt : a prompt from running XMonad commands
 --     - mod+x : Pops open a menu with a list of XMonad commands (can be
 --       modified to use a custom command list; see XMonadPromptC)
 
+import Control.Monad (unless)
 import System.IO
 import XMonad
 import XMonad.Actions.CycleWS
@@ -122,7 +140,7 @@ manageNamedScratchPad = namedScratchpadManageHook scratchpads
 
 myConfig xmproc = gnomeConfig
     { modMask = myModMask
-    , XMonad.workspaces = ["mc(1)", "r2r(2)", "mat2160(3)", "mat2260(4)"] ++ map show [5..8] ++ ["scratch(9)"] ++ ["NSP"]
+    , XMonad.workspaces = ["mc(1)", "r2r(2)", "lrbs(3)", "imm3(4)", "nserc(5)"] ++ map show [6..8] ++ ["scratch(9)"] ++ ["NSP"]
     , layoutHook = boringWindows $ avoidStruts $ smartBorders $
         -- ThreeCol:
         --   first arg : number of windows in main window
@@ -152,13 +170,18 @@ myConfig xmproc = gnomeConfig
         , ((myModMask, xK_s), sendMessage MirrorExpand)
         -- Maximize
         , ((myModMask, xK_z), withFocused (sendMessage . maximizeRestore))
-        -- CycleWS
-        , ((myModMask, xK_grave), toggleWS)
+        -- CycleWS : move / shift to toggle previously displayed workspace
+        , ((myModMask, xK_grave), toggleWS' ["NSP"])
+        , ((myModMask .|. shiftMask, xK_grave), shiftToggleWS' ["NSP"] >> toggleWS)
+        , ((myModMask .|. shiftMask, xK_grave), shiftToggleWS' ["NSP"] >> toggleWS)
+        -- CycleWS : move / shift to next empty workspace
+        , ((myModMask, xK_f), moveTo Next EmptyWS)
+        -- CycleWS : workspace cycling
         , ((myModMask .|. controlMask, xK_Left), prevWS)
         , ((myModMask .|. controlMask, xK_Right), nextWS)
         , ((myModMask .|. shiftMask, xK_Left), shiftToPrev >> prevWS)
         , ((myModMask .|. shiftMask, xK_Right), shiftToNext >> nextWS)
-        -- also use vi-like keybindings to cycle through workspaces
+        -- CycleWS : workspace cycling with vi-like keybindings
         , ((myModMask .|. controlMask, xK_h), prevWS)
         , ((myModMask .|. controlMask, xK_l), nextWS)
         , ((myModMask .|. controlMask .|. shiftMask, xK_h), shiftToPrev >> prevWS)
@@ -229,3 +252,15 @@ myLogHook xmproc = dynamicLogWithPP xmobarPP
       , ppHiddenNoWindows = xmobarColor "#333333" ""
       , ppUrgent  = xmobarColor "red" ""
       }
+
+
+-- Shift window to workspace displayed previously
+-- Source: https://github.com/mariuswol/xmonad-config/blob/master/Utils.hs
+shiftToggleWS' :: [WorkspaceId] -> X ()
+shiftToggleWS' skips = do
+    hs' <- cleanHiddens skips
+    unless (null hs') (windows . StackSet.shift . StackSet.tag $ head hs')
+    where
+        -- | Copied from XMonad.Actions.CycleWS
+        cleanHiddens :: [WorkspaceId] -> X [WindowSpace]
+        cleanHiddens skips =  gets $ (flip skipTags) skips . StackSet.hidden . windowset
