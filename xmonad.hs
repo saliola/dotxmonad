@@ -43,7 +43,7 @@
 --
 -- - InsertPosition : Configure where new windows should be added and which
 --       window should be focused
---     - currently configured to pul new windows in the master pane
+--     - currently configured to put new windows in the master pane
 --
 -- - PhysicalScreens : rebind keys to switch xinerama screens (screen 0 is to
 --       the left of screen 1)
@@ -77,6 +77,7 @@ import XMonad.Config.Gnome
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.ManageHelpers
 import XMonad.Layout.BoringWindows as BoringWindows
 import XMonad.Layout.Maximize
 import XMonad.Layout.NoBorders
@@ -103,11 +104,13 @@ main = do
     xmonad $ myConfig xmproc
 
 myManageHook :: [ManageHook]
--- EXAMPLE: how to tell XMonad to ignore a particular window
--- myManageHook =  [ className =? "Unity-2d-panel"    --> doIgnore
---                 , className =? "Unity-2d-launcher" --> doIgnore
---                 ]
-myManageHook =  []
+myManageHook =  [
+    -- float dialog boxes
+      isDialog --> doCenterFloat
+    -- float pop-up windows (browser pop-ups, for instance)
+    , stringProperty "WM_WINDOW_ROLE" =? "pop-up" --> doCenterFloat
+    , isFullscreen --> doFullFloat
+ ]
 
 scratchpads = [
  -- run xterm, find it by title, place it in a floating window: the size is
@@ -123,17 +126,6 @@ scratchpads = [
          (title =? "Nouveau document - Antidote")
          nonFloating
  ]
-
--- EXAMPLES OF SCRATCHPADS
--- scratchpads = [
---  -- run gvim, find by role, place it in a floating window
---     , NS "notes"
---          "gvim --role notes ~/notes.txt"
---          (role =? "notes")
---          (customFloating $ StackSet.RationalRect (1/6) (1/6) (2/3) (2/3))
---  -- run gvim, find by role, don't float
---      NS "notes" "gvim --role notes ~/notes.txt" (role =? "notes") nonFloating
---  ] where role = stringProperty "WM_WINDOW_ROLE"
 
 manageNamedScratchPad :: ManageHook
 manageNamedScratchPad = namedScratchpadManageHook scratchpads
