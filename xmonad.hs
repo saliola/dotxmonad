@@ -207,7 +207,7 @@ myConfig xmproc = gnomeConfig
         , ((myModMask .|. controlMask, xK_b), windowPromptBring defaultXPConfig { position = Top, alwaysHighlight = True })
         , ((myModMask .|. controlMask, xK_g), windowPromptGoto defaultXPConfig { autoComplete = Just 500000, position = Top, alwaysHighlight = True })
         -- XMonadPrompt: prompt for a XMonad command
-        , ((myModMask, xK_x), xmonadPrompt defaultXPConfig { position = Top, alwaysHighlight = True })
+        , ((myModMask .|. shiftMask, xK_x), xmonadPrompt defaultXPConfig { position = Top, alwaysHighlight = True })
         -- Combo
         , ((myModMask .|. controlMask .|. shiftMask, xK_Right), sendMessage $ Move R)
         , ((myModMask .|. controlMask .|. shiftMask, xK_Left ), sendMessage $ Move L)
