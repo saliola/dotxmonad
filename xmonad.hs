@@ -69,6 +69,7 @@ import System.IO
 import XMonad
 import XMonad.Actions.CycleWS
 import XMonad.Actions.PhysicalScreens
+import XMonad.Actions.FindEmptyWorkspace
 import XMonad.Config.Gnome
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
@@ -166,8 +167,6 @@ myConfig xmproc = gnomeConfig
         , ((myModMask, xK_grave), toggleWS' ["NSP"])
         , ((myModMask .|. shiftMask, xK_grave), shiftToggleWS' ["NSP"] >> toggleWS)
         , ((myModMask .|. shiftMask, xK_grave), shiftToggleWS' ["NSP"] >> toggleWS)
-        -- CycleWS : move / shift to next empty workspace
-        , ((myModMask, xK_f), moveTo Next EmptyWS)
         -- CycleWS : workspace cycling
         , ((myModMask .|. controlMask, xK_Left), prevWS)
         , ((myModMask .|. controlMask, xK_Right), nextWS)
@@ -178,6 +177,9 @@ myConfig xmproc = gnomeConfig
         , ((myModMask .|. controlMask, xK_l), nextWS)
         , ((myModMask .|. controlMask .|. shiftMask, xK_h), shiftToPrev >> prevWS)
         , ((myModMask .|. controlMask .|. shiftMask, xK_l), shiftToNext >> nextWS)
+        -- FindEmptyWorkspace : move / shift to next empty workspace
+        , ((myModMask, xK_f), viewEmptyWorkspace)
+        , ((myModMask .|. shiftMask, xK_f), tagToEmptyWorkspace)
         -- BoringWindows
         , ((myModMask, xK_k), BoringWindows.focusUp)
         , ((myModMask, xK_j), BoringWindows.focusDown)
