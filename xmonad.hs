@@ -41,10 +41,6 @@
 --       called "scratchpad" and the title of the window must by "scratchpad";
 --       I also like to disable the scrollbars and the menubar.
 --
--- - InsertPosition : Configure where new windows should be added and which
---       window should be focused
---     - currently configured to put new windows in the master pane
---
 -- - PhysicalScreens : rebind keys to switch xinerama screens (screen 0 is to
 --       the left of screen 1)
 --     - mod+w : switch to screen 0
@@ -75,16 +71,19 @@ import XMonad.Actions.CycleWS
 import XMonad.Actions.PhysicalScreens
 import XMonad.Config.Gnome
 import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Layout.BoringWindows as BoringWindows
+import XMonad.Layout.Combo
+import XMonad.Layout.Grid
+import XMonad.Layout.Master
 import XMonad.Layout.Maximize
 import XMonad.Layout.NoBorders
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.Tabbed
 import XMonad.Layout.ThreeColumns
 import XMonad.Layout.TwoPane
+import XMonad.Layout.WindowNavigation
 import XMonad.ManageHook
 import XMonad.Prompt
 import XMonad.Prompt.Shell
@@ -96,8 +95,6 @@ import XMonad.Util.EZConfig
 import XMonad.Util.NamedScratchpad
 import XMonad.Util.Run(spawnPipe)
 
-import XMonad.Layout.Combo
-import XMonad.Layout.WindowNavigation
 
 main = do
     xmproc <- spawnPipe "xmobar /home/saliola/.xmonad/xmobarrc"
@@ -139,16 +136,19 @@ myConfig xmproc = gnomeConfig
         --   second arg: myDelta
         --   third arg : if positive, size of main window
         (
-        maximize tiled |||
-        TwoPane (3/100) (1/2) |||
+        myMasterGrid |||
+        myMastersimpleTabbed |||
         myLatex |||
-        maximize (ThreeCol 1 myDelta (2/5)) |||
-        maximize (ThreeColMid 1 myDelta (2/5)) |||
-        maximize (Mirror tiled) |||
+        myCode |||
+        myTiled |||
+        myTwoPane |||
+        myThreeColumn |||
+        myThreeColumnMid |||
+        myMirrorTiled |||
         Full |||
         simpleTabbed
         )
-    , manageHook = insertPosition Master Newer <+> manageHook gnomeConfig <+> composeAll myManageHook <+> manageNamedScratchPad
+    , manageHook = manageHook gnomeConfig <+> composeAll myManageHook <+> manageNamedScratchPad
     , normalBorderColor  = myNormalBorderColor
     , focusedBorderColor = myFocusedBorderColor
     , borderWidth = myBorderWidth
@@ -224,19 +224,20 @@ myConfig xmproc = gnomeConfig
         myNormalBorderColor  = "black"
         myFocusedBorderColor = "yellow"
         myBorderWidth = 4
-        myLatex = windowNavigation (
-                                    combineTwo
-                                    (TwoPane myDelta 0.45)
-                                    (Full)
-                                    (combineTwo
-                                        (Mirror (TwoPane myDelta 0.85))
-                                        (Full)
-                                        (Full)
-                                    )
-                                   )
+        myMasterGrid = mastered myDelta (1/2) $ maximize Grid
+        myMastersimpleTabbed = mastered myDelta (1/2) $ simpleTabbed
+        myTiled = maximize tiled
+        myTwoPane = TwoPane (3/100) (1/2)
+        myThreeColumn = maximize (ThreeCol 1 myDelta (2/5))
+        myThreeColumnMid = maximize (ThreeColMid 1 myDelta (2/5))
+        myMirrorTiled = maximize (Mirror tiled)
+        myLatex = mastered myDelta (1/2) $
+                    windowNavigation (combineTwo (Mirror (TwoPane myDelta 0.4)) (simpleTabbed) (Full))
+        myCode = mastered myDelta (1/2) $ maximize (Mirror (TwoPane myDelta 0.6))
 
 myLogHook xmproc = dynamicLogWithPP xmobarPP
-      { ppOutput  = hPutStrLn xmproc
+      {
+        ppOutput  = hPutStrLn xmproc
       , ppTitle   = xmobarColor "purple" "" . shorten 50
       , ppCurrent = xmobarColor "orange" "" . wrap "[" "]"
       , ppVisible = xmobarColor "yellow" "" . wrap "(" ")"
