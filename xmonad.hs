@@ -107,6 +107,7 @@ myManageHook =  [
       isDialog --> doCenterFloat
     -- float pop-up windows (browser pop-ups, for instance)
     , stringProperty "WM_WINDOW_ROLE" =? "pop-up" --> doCenterFloat
+    , stringProperty "WM_NAME" =? "xmessage" --> doCenterFloat
     , isFullscreen --> doFullFloat
  ]
 
@@ -214,7 +215,7 @@ myConfig xmproc = gnomeConfig
         , ((myModMask .|. controlMask .|. shiftMask, xK_Right), sendMessage $ Move R)
         , ((myModMask .|. controlMask .|. shiftMask, xK_Left ), sendMessage $ Move L)
         , ((myModMask .|. controlMask .|. shiftMask, xK_Up   ), sendMessage $ Move U)
-        , ((myModMask .|. controlMask .|. shiftMask, xK_Down ), sendMessage $ Move D)       --
+        , ((myModMask .|. controlMask .|. shiftMask, xK_Down ), sendMessage $ Move D)
         ]
     where
         myModMask = mod1Mask
