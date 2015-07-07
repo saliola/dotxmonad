@@ -189,8 +189,10 @@ myConfig xmproc = gnomeConfig
         , ((myModMask .|. shiftMask .|. controlMask, xK_b), BoringWindows.clearBoring)
         -- Application launcher dmenu
         , ((myModMask, xK_p), spawn "dmenu_run")
+        , ((myModMask, xK_space), spawn "dmenu_run")
         -- WindowShell: command launcher
         , ((myModMask .|. shiftMask, xK_p), shellPrompt defaultXPConfig { position = Top })
+        , ((myModMask .|. shiftMask, xK_space), shellPrompt defaultXPConfig { position = Top })
         -- Push window back into tiling (free up xK_t for scratchPad)
         , ((myModMask .|. shiftMask, xK_t), withFocused $ windows.StackSet.sink)
         -- scratchpad (floating terminal)
@@ -216,6 +218,9 @@ myConfig xmproc = gnomeConfig
         , ((myModMask .|. controlMask .|. shiftMask, xK_Left ), sendMessage $ Move L)
         , ((myModMask .|. controlMask .|. shiftMask, xK_Up   ), sendMessage $ Move U)
         , ((myModMask .|. controlMask .|. shiftMask, xK_Down ), sendMessage $ Move D)
+        -- Layout
+        , ((myModMask .|. controlMask, xK_space), sendMessage NextLayout)
+        , ((myModMask .|. controlMask .|. shiftMask, xK_space), sendMessage FirstLayout)
         ]
     where
         myModMask = mod1Mask
