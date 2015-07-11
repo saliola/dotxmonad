@@ -112,13 +112,13 @@ myManageHook =  [
  ]
 
 scratchpads = [
- -- run xterm, find it by title, place it in a floating window: the size is
- -- given as (StackSet.RationalRect l t w h), where h is height, w is width,
- -- t is distance from top, l is distance from left (percentage)
+ -- run gnome-terminal, find it by title, place it in a floating window: the
+ -- size is given as (StackSet.RationalRect l t w h), where h is height, w is
+ -- width, t is distance from top, l is distance from left (percentage)
       NS "gnome-terminal"
          "gnome-terminal --window-with-profile=scratchpad --disable-factory --title scratchpad"
          (title =? "scratchpad")
-         (customFloating $ StackSet.RationalRect (0) (7/10) (1) (3/10))
+         (customFloating $ StackSet.RationalRect (0) (0) (4/10) (6/10))
  -- run antidote, find by title, don't float
     , NS "antidote"
          "/home/saliola/Applications/bin/antidote"
