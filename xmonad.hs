@@ -154,7 +154,7 @@ myConfig xmproc = gnomeConfig
     , normalBorderColor  = myNormalBorderColor
     , focusedBorderColor = myFocusedBorderColor
     , borderWidth = myBorderWidth
-    , focusFollowsMouse = False
+    , focusFollowsMouse = True
     , logHook = myLogHook xmproc
     }
     `additionalKeys`
